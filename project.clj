@@ -24,7 +24,16 @@
                  [migratus "0.8.7"]
                  [conman "0.2.3"]
                  [com.h2database/h2 "1.4.188"]
-                 [org.immutant/web "2.1.0"]]
+                 [org.immutant/web "2.1.0"]
+
+                 [org.clojure/data.json "0.2.6"]
+                 [com.novemberain/monger "3.0.0-rc2"]
+                 ;[pay/chinaums "2.0.4"]
+                 [http-kit "2.1.18"]
+                 [cheshire "5.5.0"]
+                 [clj-http "2.0.0"]
+
+                 ]
 
   :min-lein-version "2.0.0"
   :uberjar-name "hospitaloaserver.jar"
