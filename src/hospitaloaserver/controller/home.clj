@@ -10,5 +10,37 @@
            )
   )
 
+(defn getdepts[]
+
+  (ok db/get-depts)
+
+  )
+
+
+(defn adddept [deptname]
+   (try
+      (let [
+             item (db/get-depts-by-cond {:deptname deptname})
+             ]
+
+      (do
+        (if (empty? item)
+          (ok {:success true :message "添加成功" :id  (:_id (db/add-dept {:deptname deptname}))})
+          (ok {:success false :message (str "添加失败!" "科室:"deptname ",已经存在")})
+          )
+
+        )
+      )
+      (catch Exception ex
+        (ok {:success false :message (.getMessage ex)})
+        )
+
+    )
+
+
+
+
+  )
+
 
 

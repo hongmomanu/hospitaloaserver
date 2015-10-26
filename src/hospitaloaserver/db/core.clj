@@ -15,6 +15,29 @@
               db))
 
 
+(defn get-depts []
+
+   (mc/find-maps
+    db "depts" {}
+    )
+
+  )
+
+(defn get-depts-by-cond [cond]
+
+  (mc/find-maps
+    db "depts" cond
+    )
+
+  )
+
+(defn add-dept [item]
+
+  (mc/insert-and-return db "depts" item)
+
+  )
+
+
 
 
 

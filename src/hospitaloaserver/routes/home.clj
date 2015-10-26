@@ -1,6 +1,7 @@
 (ns hospitaloaserver.routes.home
   (:require [hospitaloaserver.layout :as layout]
-            [compojure.core :refer [defroutes GET]]
+            [hospitaloaserver.controller.home :as home]
+            [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
             [clojure.java.io :as io]))
 
@@ -13,5 +14,11 @@
 
 (defroutes home-routes
   (GET "/" [] (home-page))
+
+  (GET "/getdepts" [] (home/getdepts))
+
+  (GET "/adddept" [deptname] (home/adddept deptname))
+
+
   (GET "/about" [] (about-page)))
 
