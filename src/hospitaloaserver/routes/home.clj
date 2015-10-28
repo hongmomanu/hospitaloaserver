@@ -15,9 +15,16 @@
 (defroutes home-routes
   (GET "/" [] (home-page))
 
+  (GET "/login" [username password] (home/login username password))
+
   (GET "/getdepts" [] (home/getdepts))
 
+  (GET "/getusersbydeptid" [deptid] (home/getusersbydeptid deptid) )
+
   (GET "/adddept" [deptname] (home/adddept deptname))
+
+  (GET "/adduser" [deptid username realname password]
+       (home/adduser deptid username realname password))
 
 
   (GET "/about" [] (about-page)))

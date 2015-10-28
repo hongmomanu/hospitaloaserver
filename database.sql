@@ -76,9 +76,14 @@ db.messages.insert({
 content : "hello",
 fromid:"",
 toid:"",
+groupid:"",
 isread:false,
+ftype:'text',
 mtype:"group"
 })
+
+
+
 
 
 

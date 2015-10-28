@@ -3,6 +3,7 @@
             [immutant.web :as immutant]
             [hospitaloaserver.db.migrations :as migrations]
             [clojure.tools.nrepl.server :as nrepl]
+            [hospitaloaserver.public.websocket :as websocket]
             [taoensso.timbre :as timbre]
             [environ.core :refer [env]])
   (:gen-class))
@@ -60,10 +61,11 @@
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
   (start-nrepl)
   (start-http-server (http-port port))
+  (websocket/start-server (+ (:port @http-server) 1))
   (timbre/info "server started on port:" (:port @http-server)))
 
 (defn -main [& args]
   (cond
     (some #{"migrate" "rollback"} args) (migrations/migrate args)
     :else (start-app args)))
-  
+

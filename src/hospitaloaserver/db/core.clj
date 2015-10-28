@@ -31,6 +31,27 @@
 
   )
 
+(defn get-dept-by-id [oid]
+
+  (mc/find-map-by-id
+    db "depts" oid
+    )
+  )
+(defn get-users-by-cond [cond]
+
+  (mc/find-maps
+    db "users" cond
+    )
+
+  )
+
+(defn add-user [item]
+
+  (mc/insert-and-return db "users" item)
+
+  )
+
+
 (defn add-dept [item]
 
   (mc/insert-and-return db "depts" item)
