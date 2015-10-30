@@ -19,12 +19,21 @@
 
   (GET "/getdepts" [] (home/getdepts))
 
+  (GET "/addmessage" [content ftype fromid toid groupid mtype toname fromname] (home/addmessage content ftype fromid toid groupid mtype toname fromname))
+
+  (POST "/addmessage" [content ftype fromid toid groupid mtype toname fromname] (home/addmessage content ftype fromid toid groupid mtype toname fromname))
+
+
+  (GET "/getmessagehistory" [fromid toid time] (home/getmessage-history fromid toid time))
+  (POST "/getmessagehistory" [fromid toid time] (home/getmessage-history fromid toid time))
   (GET "/getusersbydeptid" [deptid] (home/getusersbydeptid deptid) )
 
   (GET "/adddept" [deptname] (home/adddept deptname))
 
   (GET "/adduser" [deptid username realname password]
        (home/adduser deptid username realname password))
+
+  (GET "/getunreadmsgbyuid" [userid] (home/getunreadmsgbyuid userid))
 
 
   (GET "/about" [] (about-page)))

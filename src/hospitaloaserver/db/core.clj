@@ -6,7 +6,7 @@
     [monger.core :as mg]
     [monger.collection :as mc]
     [monger.operators :refer :all]
-    [monger.query :refer [with-collection find options paginate sort fields]]
+    [monger.query :refer [with-collection find options paginate sort fields limit]]
     [environ.core :refer [env]])
   )
 
@@ -56,6 +56,31 @@
 
   (mc/insert-and-return db "depts" item)
 
+  )
+
+(defn insert-message [item]
+
+  (mc/insert-and-return db "messages" item)
+
+  )
+
+(defn get-unreadmsg-by-uid [cond]
+  (mc/find-maps
+    db "messages" cond
+    )
+
+  )
+
+(defn get-message [conds size]
+  (with-collection db "messages"
+    (find conds)
+    (sort {:time -1})
+    (limit size))
+
+  )
+
+(defn update-message-byid [oid data]
+   (mc/update-by-id db "messages" oid {$set data})
   )
 
 

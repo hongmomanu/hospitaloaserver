@@ -77,6 +77,7 @@ content : "hello",
 fromid:"",
 toid:"",
 groupid:"",
+time:new Date(),
 isread:false,
 ftype:'text',
 mtype:"group"
