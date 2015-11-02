@@ -32,6 +32,8 @@
                  [http-kit "2.1.18"]
                  [cheshire "5.5.0"]
                  [clj-http "2.0.0"]
+                 [clj-time "0.11.0"]
+                  [lib-noir "0.9.9"]
 
                  ]
 
@@ -54,8 +56,8 @@
                                  [ring/ring-devel "1.4.0"]
                                  [pjstadig/humane-test-output "0.7.0"]
                                  [mvxcvi/puget "0.9.1"]]
-                  
-                  
+
+
                   :repl-options {:init-ns hospitaloaserver.core}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]

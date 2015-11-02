@@ -8,7 +8,7 @@
             [clojure.data.json :as json]
             [monger.json]
             [taoensso.timbre :as timbre]
-             [monger.operators :refer [$gt $lt $and  $or]]
+             [monger.operators :refer [$gt $lt $and $ne $push $or]]
             [cheshire.core :refer :all]
             [clj-time.core :as t]
             [clj-time.format :as f]
@@ -20,7 +20,7 @@
 
 (def custom-formatter (f/formatter "yyyy-MM-dd'T'hh:mm:ss'Z'"))
 
-(declare send-message-online)
+(declare send-message-online send-message-online-group)
 (defn getdepts[]
 
   (let [depts (db/get-depts)]
@@ -49,6 +49,18 @@
         ]
 
     (db/get-message {$and [{$or [{:fromid fromid :toid toid} {:fromid  toid :toid fromid}]} {:time { $lt (.toDate datetime) }} ]} 10)
+    )
+
+
+  )
+(defn get-group-message-history [fromid groupid time]
+
+
+  (let [
+        datetime (f/parse (f/formatters :date-time-no-ms) time)
+        ]
+
+    (db/get-message {$and [{:groupid  groupid } {:time { $lt (.toDate datetime) }} ]} 10)
     )
 
 
@@ -83,6 +95,43 @@
 
   )
 
+(defn addgroupmessage [content ftype fromid toid groupid mtype toname fromname]
+
+  (try
+
+
+    (let [
+          item (db/insert-message
+                {
+                 :content content :ftype ftype
+                 :fromid fromid :toid toid :isread false
+                 :toname toname :fromname fromname :userids []
+                 :groupid groupid :mtype mtype :time (new Date)
+                 }
+             )
+
+          groupitems (db/get-users-by-cond {$and [{:deptid groupid} {:_id {$ne (ObjectId. fromid)}}]})
+
+          ]
+
+      (dorun (map #(send-message-online-group (str (:_id %)) item) groupitems))
+      (db/update-group-message-byid (:_id item)  {:userids fromid})
+
+
+      (ok {:success true })
+
+      )
+
+      (catch Exception ex
+        (ok {:success false :message (.getMessage ex)})
+        )
+
+    )
+
+  )
+
+
+
 
 (defn send-message-online [userid msg ]
 
@@ -102,6 +151,35 @@
         false)
 
         (db/update-message-byid (:_id msg) {:isread true})
+        )
+
+
+
+      )
+    )
+
+
+  )
+
+(defn send-message-online-group [userid msg ]
+
+  (doseq [channel (keys @websocket/channel-hub)]
+    (when (= (get  (get @websocket/channel-hub channel) "userid") userid)
+
+      (do
+        (timbre/info "send-message-online : " msg )
+
+        (send! channel (generate-string
+                       {
+
+                         :data  msg
+                         :type "message"
+                         }
+                       )
+        false)
+
+        (db/update-group-message-byid (:_id msg)  {:userids userid})
+
         )
 
 

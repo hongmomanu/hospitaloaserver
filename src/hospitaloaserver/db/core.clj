@@ -83,6 +83,10 @@
    (mc/update-by-id db "messages" oid {$set data})
   )
 
+(defn update-group-message-byid [oid data]
+   (mc/update-by-id db "messages" oid {$push data})
+  )
+
 
 
 
