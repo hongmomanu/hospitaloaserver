@@ -8,7 +8,7 @@
             [clojure.data.json :as json]
             [monger.json]
             [taoensso.timbre :as timbre]
-             [monger.operators :refer [$gt $lt $and $ne $push $or]]
+             [monger.operators :refer [$gt $lt $and $ne $push $or $nin]]
             [cheshire.core :refer :all]
             [clj-time.core :as t]
             [clj-time.format :as f]
@@ -51,6 +51,26 @@
     (db/get-message {$and [{$or [{:fromid fromid :toid toid} {:fromid  toid :toid fromid}]} {:time { $lt (.toDate datetime) }} ]} 10)
     )
 
+
+  )
+
+
+
+(defn getunreadmessages [userid deptid]
+
+  (let [
+        unreadperson (db/get-unreadmsg-by-uid {:toid userid :isread false})
+
+
+
+        unreadgroups (db/get-unreadmsg-by-uid {:toid deptid :userids {$nin [userid]}})
+
+        msgs (concat unreadperson unreadgroups)
+
+        ]
+    (dorun (map #(send-message-online  userid %) msgs))
+    (ok (concat unreadperson unreadgroups) )
+   )
 
   )
 (defn get-group-message-history [fromid groupid time]

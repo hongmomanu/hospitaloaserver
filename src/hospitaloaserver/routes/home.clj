@@ -7,6 +7,7 @@
             [clj-time.local :as l]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
+            [ring.util.response :refer [file-response]]
             [clojure.java.io :as io]))
 
 (defn home-page []
@@ -22,6 +23,8 @@
   (GET "/login" [username password] (home/login username password))
 
   (GET "/getdepts" [] (home/getdepts))
+
+  (GET "/getunreadmessages" [userid deptid] (home/getunreadmessages userid deptid))
 
   (GET "/addmessage" [content ftype fromid toid groupid mtype toname fromname] (home/addmessage content ftype fromid toid groupid mtype toname fromname))
 
@@ -51,18 +54,35 @@
 
   (GET "/getunreadmsgbyuid" [userid] (home/getunreadmsgbyuid userid))
 
+    (GET "/files/:filename" [filename]
+
+    (file-response (str commonfunc/datapath "upload/" filename))
+
+    )
+
 
   (POST "/uploadfile"  [file]
 
-    (let [
+        (println file)
+    (try
+      (do
+       (let [
           uploadpath  (str commonfunc/datapath "upload/")
           timenow (c/to-long  (l/local-now))
           filename (str timenow (:filename file))
           ]
       ;(println filename)
       (nio/upload-file uploadpath  (conj file {:filename filename}))
-      (ok {:success true :filename filename})
+      (ok {:success true :filename filename :filetype (:content-type file)})
       )
+      )
+    (catch Exception ex
+
+      (ok {:success false :message (.getMessage ex)})
+      ))
+
+
+
 
     )
 
