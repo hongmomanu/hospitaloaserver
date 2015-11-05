@@ -4,6 +4,7 @@
         )
   (:require [hospitaloaserver.db.core :as db]
             [hospitaloaserver.public.websocket :as websocket]
+
             [ring.util.http-response :refer [ok]]
             [clojure.data.json :as json]
             [monger.json]
@@ -69,7 +70,10 @@
 
         ]
     (dorun (map #(send-message-online  userid %) msgs))
-    (ok (concat unreadperson unreadgroups) )
+
+    (dorun (map #(db/update-group-message-byid (:_id %)  {:userids userid}) unreadgroups))
+
+    (ok {:success true} )
    )
 
   )
@@ -103,7 +107,7 @@
 
       (send-message-online toid item)
 
-      (ok {:success true })
+      (ok {:success true :data item})
 
       )
 

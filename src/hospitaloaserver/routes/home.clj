@@ -73,7 +73,7 @@
           ]
       ;(println filename)
       (nio/upload-file uploadpath  (conj file {:filename filename}))
-      (ok {:success true :filename filename :filetype (:content-type file)})
+      (ok {:success true :filename filename :name (:filename file) :filetype (:content-type file)})
       )
       )
     (catch Exception ex
