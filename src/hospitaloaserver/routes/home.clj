@@ -49,6 +49,14 @@
 
   (GET "/adddept" [deptname] (home/adddept deptname))
 
+  ;(GET "/firechatvideo" [fromid toid ] (home/firechatvideo fromid toid ))
+  (POST "/firechatvideo" [fromid toid ] (home/firechatvideo fromid toid ))
+
+  (POST "/firechatend" [fromid toid ] (home/firechatend fromid toid ))
+
+  ;(GET "/firechatarrived" [fromid toid ] (home/firechatarrived fromid toid ))
+  (POST "/firechatarrived" [fromid toid ischating] (home/firechatarrived fromid toid ischating))
+
   (GET "/adduser" [deptid username realname password]
        (home/adduser deptid username realname password))
 

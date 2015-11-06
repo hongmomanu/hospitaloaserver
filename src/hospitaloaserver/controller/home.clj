@@ -156,6 +156,99 @@
 
 
 
+(defn firechatvideo [fromid toid]
+
+
+ (doseq [channel (keys @websocket/channel-hub)]
+    (when (= (get  (get @websocket/channel-hub channel) "userid") toid)
+
+      (do
+        (timbre/info "firechatvideo-online : " fromid )
+
+        (send! channel (generate-string
+                       {
+
+                         :data  {:fromid fromid :toid toid}
+                         :type "firechatvideo"
+                         }
+                       )
+        false)
+
+
+        )
+
+
+
+      )
+    )
+
+  (ok {:success true})
+
+
+ )
+
+
+(defn firechatend [fromid toid]
+
+
+ (doseq [channel (keys @websocket/channel-hub)]
+    (when (= (get  (get @websocket/channel-hub channel) "userid") toid)
+
+      (do
+        (timbre/info "firechatvideo-online : " fromid )
+
+        (send! channel (generate-string
+                       {
+
+                         :data  {:fromid fromid :toid toid}
+                         :type "firechatend"
+                         }
+                       )
+        false)
+
+
+        )
+
+
+
+      )
+    )
+
+  (ok {:success true})
+
+
+ )
+
+(defn firechatarrived [fromid toid ischating]
+
+
+ (doseq [channel (keys @websocket/channel-hub)]
+    (when (= (get  (get @websocket/channel-hub channel) "userid") fromid)
+
+      (do
+        (timbre/info "firechatarrived-online : " toid )
+
+        (send! channel (generate-string
+                       {
+
+                         :data  {:fromid fromid :toid toid :ischating ischating}
+                         :type "firechatarrived"
+                         }
+                       )
+        false)
+
+
+        )
+
+
+
+      )
+    )
+  (ok {:success true})
+
+
+ )
+
 
 (defn send-message-online [userid msg ]
 
